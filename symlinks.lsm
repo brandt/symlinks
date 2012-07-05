@@ -1,0 +1,36 @@
+Begin2
+Title        =symlinks - scan/change symbolic links
+Version      =1.4
+Desc1        =Scans directories for symbolic links, and identifies dangling,
+Desc2        =relative, absolute, messy, and other_fs links.  Can optionally
+Desc3        =change absolute links to relative within a given filesystem.
+Desc4        =Recommended for use by anyone developing and/or maintaining
+Desc5        =a Linux FTP site or distribution or CD-ROM.
+Author       =Mark Lord
+AuthorEmail  =mlord@pobox.com
+Maintainer   =Mark Lord
+MaintEmail   =mlord@pobox.com
+Site1        =tsx-11.mit.edu
+Path1        =/pub/linux/sources/usr.bin
+File1        =symlinks-1.4.tar.gz
+FileSize1    =5KB
+Required1    =
+Required2    =
+Required3    =
+Required4    =
+CopyPolicy1  =(c) Mark Lord, freely distributable
+CopyPolicy2  =
+Keywords     =symbolic links cd cdrom CD-ROM distribution
+Comment1     =v1.4 incorporate patches from Fedora
+Comment1     =v1.3 more messy-link fixes, new -o flag for other_fs
+Comment2     =v1.2 added -s flag to shorten links with redundant
+Comment3     =path elements.  Also includes code to remove excess
+Comment4     =slashes from paths.
+RelFiles1    =
+RelFiles2    =
+RelFiles3    =
+Entered      =09OCT2009
+EnteredBy    =Mark Lord
+CheckedEmail =mlord@pobox.com
+End
+

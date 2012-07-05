@@ -1,0 +1,123 @@
+.TH SYMLINKS 8 "October 2008" "Version 1.4"
+
+.SH NAME
+symlinks \- symbolic link maintenance utility
+.SH SYNOPSIS
+.B symlinks
+[
+.B -cdorstv
+]
+dirlist
+.SH DESCRIPTION
+.BI symlinks
+is a useful utility for maintainers of FTP sites, CDROMs,
+and Linux software distributions.
+It scans directories for symbolic links and lists them on stdout,
+often revealing flaws in the filesystem tree.
+.PP
+Each link is output with a classification of
+.B relative,
+.B absolute,
+.B dangling,
+.B messy,
+.B lengthy,
+or
+.B other_fs.
+.PP
+.B relative
+links are those expressed as paths relative to the directory in which
+the links reside, usually independent of the mount point of the filesystem.
+.PP
+.B absolute
+links are those given as an absolute path from the root directory
+as indicated by a leading slash (/).
+.PP
+.B dangling
+links are those for which the target of the link does not currently exist.
+This commonly occurs for
+.B absolute
+links when a filesystem is mounted at other than its
+customary mount point (such as when the normal root filesystem is
+mounted at /mnt after booting from alternative media).
+.PP
+.B messy
+links are links which contain unnecessary slashes or dots in the path.
+These are cleaned up as well when
+.B -c
+is specified.
+.PP
+.B lengthy
+links are links which use "../" more than necessary in the path
+(eg.  /bin/vi -> ../bin/vim)
+These are only detected when
+.B -s
+is specified, and are only cleaned up when
+.B -c
+is also specified.
+.PP
+.B other_fs
+are those links whose target currently resides on a different filesystem
+from where symlinks was run (most useful with
+.B -r
+).
+.PP
+.SH OPTIONS
+.TP
+.I -c 
+convert absolute links (within the same filesystem) to relative links.
+This permits links to maintain their validity regardless of the mount
+point used for the filesystem -- a desirable setup in most cases.
+This option also causes any
+.B messy
+links to be cleaned up, and, if
+.B -s
+was also specified, then
+.B lengthy
+links are also shortened.
+Links affected by
+.B -c
+are prefixed with
+.B changed
+in the output.
+.TP
+.I -d
+causes
+.B dangling
+links to be removed.
+.TP
+.I -o 
+fix links on other filesystems encountered while recursing.
+Normally, other filesystems encountered are not modified by symlinks.
+.TP
+.I -r 
+recursively operate on subdirectories within the same filesystem.
+.TP
+.I -s
+causes
+.B lengthy
+links to be detected.
+.TP
+.I -t
+is used to test for what
+.B symlinks
+would do if
+.B -c
+were specified, but without really changing anything.
+.TP
+.I -v 
+show all symbolic links.  By default, 
+.B relative
+links are not shown unless 
+.B -v
+is specified.
+.PP
+.SH BUGS
+.B symlinks
+does not recurse or change links across filesystems.
+.PP
+.SH AUTHOR
+.B symlinks 
+has been written by Mark Lord <mlord@pobox.com>, the original developer and maintainer
+of the IDE Performance Package for linux, the Linux IDE Driver subsystem, hdparm, and a current day libata hacker.
+.SH SEE ALSO
+.BR symlink (2)
