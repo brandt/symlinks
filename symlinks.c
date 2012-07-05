@@ -4,7 +4,9 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
+#if !defined(__APPLE__)
 #include <malloc.h>
+#endif
 #include <string.h>
 #include <fcntl.h>
 #include <sys/param.h>
