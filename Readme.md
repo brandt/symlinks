@@ -34,7 +34,7 @@ Usage
     $ symlinks -rv [path]
 
 
-### Convert absolute symlinks to a relative:
+### Convert absolute symlink to relative:
 
     $ symlinks -rc  [path]
 
@@ -63,4 +63,5 @@ Added -s flag to shorten links with redundant path elements.  Also includes code
 Credit
 ------
 
-Symlinks was originally created by Mark Lord (mlord@pobox.com).
+Symlinks was created by Mark Lord.
+Minor modifications made by Jonathon Brandt Buckley.
