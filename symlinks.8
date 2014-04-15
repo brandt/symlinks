@@ -1,4 +1,4 @@
-.TH SYMLINKS 8 "July 2012" "Version 1.4-1"
+.TH SYMLINKS 8 "April 2014" "Version 1.4.2"
 
 .SH NAME
 symlinks \- symbolic link maintenance utility
@@ -10,10 +10,8 @@ symlinks \- symbolic link maintenance utility
 dirlist
 .SH DESCRIPTION
 .BI symlinks
-is a useful utility for maintainers of FTP sites, CDROMs,
-and Linux software distributions.
-It scans directories for symbolic links and lists them on stdout,
-often revealing flaws in the filesystem tree.
+scans directories for symbolic links and lists them on stdout,
+often revealing broken links in the filesystem tree.
 .PP
 Each link is output with a classification of
 .B relative,
@@ -117,7 +115,6 @@ does not recurse or change links across filesystems.
 .PP
 .SH AUTHOR
 .B symlinks 
-has been written by Mark Lord <mlord@pobox.com>, the original developer and maintainer
-of the IDE Performance Package for linux, the Linux IDE Driver subsystem, hdparm, and a current day libata hacker.
+was created by Mark Lord <mlord@pobox.com>. The current maintainer is J. Brandt Buckley <brandt@runlevel1.com>.
 .SH SEE ALSO
 .BR symlink (2)
