@@ -215,7 +215,8 @@ static void fix_symlink(char *path, dev_t my_dev) {
     static char lpath[PATH_MAX], new[PATH_MAX], abspath[PATH_MAX];
     char *p, *np, *lp, *tail, *msg;
     struct stat stbuf, lstbuf;
-    int c, fix_abs = 0, fix_messy = 0, fix_long = 0;
+    int fix_abs = 0, fix_messy = 0, fix_long = 0;
+    size_t c;
     
     if ((c = readlink(path, lpath, sizeof(lpath))) == -1) {
         perror(path);
@@ -352,7 +353,7 @@ static void fix_symlink(char *path, dev_t my_dev) {
     printf("changed:  %s -> %s\n", path, new);
 }
 
-static void dirwalk(char *path, int pathlen, dev_t dev) {
+static void dirwalk(char *path, unsigned long pathlen, dev_t dev) {
     char *name;
     DIR *dfd;
     static struct stat st;
