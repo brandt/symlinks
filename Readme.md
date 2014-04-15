@@ -36,7 +36,7 @@ Usage
 
 ### Convert absolute symlink to relative:
 
-    $ symlinks -rc  [path]
+    $ symlinks -rc [path]
 
 
 ### More options:
@@ -47,21 +47,27 @@ Usage
 Changes
 -------
 
-* v1.4-1
-Added Mac OS X compatibility.
+#### v1.4.2
+- Reformatted for readability roughly based on Google style guide.
+- Fixed loss of precision due to implicit type conversion.
+- Minor documentation updates.
 
-* v1.4 
-Incorporate patches from Fedora.
+#### v1.4-1
+- Added Mac OS X compatibility.
 
-* v1.3
-More messy-link fixes, new -o flag for other_fs.
+#### v1.4 
+- Incorporate patches from Fedora.
 
-* v1.2 
-Added -s flag to shorten links with redundant path elements.  Also includes code to remove excess slashes from paths.
+#### v1.3
+- More messy-link fixes, new `-o` flag for other_fs.
+
+#### v1.2 
+- Added `-s` flag to shorten links with redundant path elements.
+- Also includes code to remove excess slashes from paths.
 
 
 Credit
 ------
 
-Symlinks was created by Mark Lord.
-Minor modifications made by Jonathon Brandt Buckley.
+Symlinks was created by **Mark Lord** <mlord@pobox.com>.  
+Maintained by **J. Brandt Buckley** <brandt@runlevel1.com>.  
