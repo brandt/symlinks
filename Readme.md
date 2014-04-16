@@ -47,6 +47,9 @@ Usage
 Changes
 -------
 
+#### v1.4.3
+- Fixed LFS support bug that caused erratic behavior on 32-bit systems.
+
 #### v1.4.2
 - Reformatted for readability roughly based on Google style guide.
 - Fixed loss of precision due to implicit type conversion.

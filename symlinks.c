@@ -29,7 +29,7 @@
 #define PATH_MAX 1024
 #endif
 
-#define progver "%s: scan/change symbolic links - v1.4.2\n\n"
+#define progver "%s: scan/change symbolic links - v1.4.3\n\n"
 
 static char *progname;
 static int verbose = 0,
