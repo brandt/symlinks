@@ -33,12 +33,14 @@
 
 static char *progname;
 static int verbose = 0,
-           fix_links = 0,
-           recurse = 0,
-           delete = 0,
-           shorten = 0,
-           testing = 0,
-           single_fs = 1;
+            fix_links = 0,
+            recurse = 0,
+            delete = 0,
+            shorten = 0,
+            testing = 0,
+            single_fs = 1,
+            emb_rootfs = 0;
+
 
 /*
  * tidypath removes excess slashes and "." references from a path string
@@ -211,13 +213,13 @@ ughh:
 }
 
 
-static void fix_symlink(char *path, dev_t my_dev) {
+static void fix_symlink(char *cwd, char *path, dev_t my_dev) {
     static char lpath[PATH_MAX], new[PATH_MAX], abspath[PATH_MAX];
     char *p, *np, *lp, *tail, *msg;
     struct stat stbuf, lstbuf;
     int fix_abs = 0, fix_messy = 0, fix_long = 0;
     size_t c;
-    
+
     if ((c = readlink(path, lpath, sizeof(lpath))) == -1) {
         perror(path);
         return;
@@ -232,23 +234,29 @@ static void fix_symlink(char *path, dev_t my_dev) {
         c = strlen(abspath);
         
         if ((c > 0) && (abspath[c - 1] == '/')) {
-            abspath[c - 1] = '\0';    /* cut trailing / */
+            abspath[c - 1] = '\0';	/* cut trailing / */
         }
         
         if ((p = strrchr(abspath, '/')) != NULL) {
-            *p = '\0';    /* cut last component */
+            *p = '\0';				/* cut last component */
         }
         
         strcat(abspath, "/");
+    } else	{
+        if (emb_rootfs) {
+            // we have an absolute path and work on an embbedded rootfs,
+            // so we have to add the rootfs prefix from cwd in order to find
+            // the targets of absolute symlinks
+            strcpy(abspath, cwd);
+        }
     }
-    
+
     strcat(abspath, lpath);
     (void) tidy_path(abspath);
     
     /* check for various things */
     if (stat(abspath, &stbuf) == -1) {
-        printf("dangling: %s -> %s\n", path, lpath);
-        
+        printf("dangling: %s -> %s (reason: %s)\n", path, lpath, strerror(errno));
         if (delete) {
             if (unlink(path)) {
                 perror(path);
@@ -256,7 +264,6 @@ static void fix_symlink(char *path, dev_t my_dev) {
                 printf("deleted:  %s -> %s\n", path, lpath);
             }
         }
-        
         return;
     }
     
@@ -290,7 +297,11 @@ static void fix_symlink(char *path, dev_t my_dev) {
     }
     
     if (msg != NULL) {
-        printf("%s %s -> %s\n", msg, path, lpath);
+        if (fix_abs && emb_rootfs) {
+            printf("%s %s -> %s (resolved to %s)\n", msg, path, lpath, abspath);
+        } else {
+	        printf("%s %s -> %s\n", msg, path, lpath);
+        }
     }
     
     if (!(fix_links || testing) || !(fix_messy || fix_abs || fix_long)) {
@@ -303,7 +314,7 @@ static void fix_symlink(char *path, dev_t my_dev) {
         /* point p    at first part of path  that differs from lpath */
         (void) tidy_path(lpath);
         tail = lp = lpath;
-        p = path;
+        p = path + strlen(cwd); // skip rootfs prefix 
         
         while (*p && (*p == *lp)) {
             if (*lp++ == '/') {
@@ -337,7 +348,7 @@ static void fix_symlink(char *path, dev_t my_dev) {
     }
     
     shorten_path(new, path);
-    
+
     if (!testing) {
         if (unlink(path)) {
             perror(path);
@@ -353,7 +364,7 @@ static void fix_symlink(char *path, dev_t my_dev) {
     printf("changed:  %s -> %s\n", path, new);
 }
 
-static void dirwalk(char *path, unsigned long pathlen, dev_t dev) {
+static void dirwalk(char *cwd, char *path, unsigned long pathlen, dev_t dev) {
     char *name;
     DIR *dfd;
     static struct stat st;
@@ -378,9 +389,9 @@ static void dirwalk(char *path, unsigned long pathlen, dev_t dev) {
                 perror(path);
             } else if (st.st_dev == dev) {
                 if (S_ISLNK(st.st_mode)) {
-                    fix_symlink(path, dev);
+                    fix_symlink(cwd, path, dev);
                 } else if (recurse && S_ISDIR(st.st_mode)) {
-                    dirwalk(path, strlen(path), dev);
+                    dirwalk(cwd, path, strlen(path), dev);
                 }
             }
         }
@@ -400,7 +411,10 @@ static void usage_error(void) {
             "\t-r  recurse into subdirs\n"
             "\t-s  shorten lengthy links (displayed in output only when -c not specified)\n"
             "\t-t  show what would be done by -c\n"
-            "\t-v  verbose (show all symlinks)\n\n");
+            "\t-e  work on an embedded rootfs which is relative to the system rootfs without\n"
+            "\t    the need to chroot / fakechroot into it, e.g. in /gpfs/sys/ubuntu11.04.\n"
+            "\t    Make sure to cd into rootfs before executing %s\n"
+            "\t-v  verbose (show all symlinks)\n\n", progname);
     exit(1);
 }
 
@@ -423,7 +437,7 @@ int main(int argc, char **argv) {
     if (!*cwd || cwd[strlen(cwd) - 1] != '/') {
         strcat(cwd, "/");
     }
-    
+
     while (--argc) {
         p = *++argv;
         
@@ -433,20 +447,20 @@ int main(int argc, char **argv) {
             }
             
             while ((c = *p++)) {
-                if (c == 'c') { fix_links = 1;
-                } else if (c == 'd') { delete    = 1;
-                } else if (c == 'o') { single_fs = 0;
-                } else if (c == 'r') { recurse   = 1;
-                } else if (c == 's') { shorten   = 1;
-                } else if (c == 't') { testing   = 1;
-                } else if (c == 'v') { verbose   = 1;
+                if (c == 'c') { fix_links  = 1;
+                } else if (c == 'd') { delete     = 1;
+                } else if (c == 'o') { single_fs  = 0;
+                } else if (c == 'r') { recurse    = 1;
+                } else if (c == 's') { shorten    = 1;
+                } else if (c == 't') { testing    = 1;
+                } else if (c == 'e') { emb_rootfs = 1;
+                } else if (c == 'v') { verbose    = 1;
                 } else {
                     usage_error();
                 }
             }
         } else {
             struct stat st;
-            
             if (*p == '/') {
                 *path = '\0';
             } else {
@@ -458,7 +472,7 @@ int main(int argc, char **argv) {
             if (lstat(path, &st) == -1) {
                 perror(path);
             } else {
-                dirwalk(path, strlen(path), st.st_dev);
+                dirwalk(cwd, path, strlen(path), st.st_dev);
             }
             
             ++dircount;

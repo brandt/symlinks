@@ -102,6 +102,11 @@ would do if
 .B -c
 were specified, but without really changing anything.
 .TP
+.I -e
+work on an embedded rootfs which is relative to the system rootfs without
+the need to chroot / fakechroot into it, e.g. in /gpfs/sys/ubuntu11.04.
+Make sure to cd into rootfs before executing
+.TP
 .I -v 
 show all symbolic links.  By default, 
 .B relative
