@@ -38,8 +38,7 @@ Usage
 
     $ symlinks -rc [path]
 
-### Convert absolute symlinks in an embedded rootfs, which lies within the
-    system rootfs, e.g. in /gpfs/sys/ubuntu11.04. Make sure to cd into rootfs before executing:
+### Convert absolute symlinks in an embedded rootfs, which lies within the system rootfs, e.g. in /gpfs/sys/ubuntu11.04. Make sure to cd into rootfs before executing:
     $ cd /gpfs/sys/ubuntu11.04
     $ symlinks -rec [path] 
 
