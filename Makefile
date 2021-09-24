@@ -20,6 +20,10 @@ install: all symlinks.8
 	$(INSTALL) -d $(MANDIR)
 	$(INSTALL) -m 644 symlinks.8 $(MANDIR)
 
+uninstall:
+	-rm -i $(BINDIR)/symlinks
+	-rm -i $(MANDIR)/symlinks.8
+
 .PHONY: clean
 clean:
 	rm -f symlinks *.o core
