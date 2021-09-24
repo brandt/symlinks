@@ -1,10 +1,13 @@
 # Makefile for symlinks
-CC     := gcc
+CC      = gcc
+INSTALL = install
 CFLAGS += $(shell getconf LFS_CFLAGS 2>/dev/null)
 OWNER   = root
 GROUP   = root
-MANDIR  = /usr/man/man8/symlinks.8
-BINDIR  = /usr/local/bin
+PREFIX ?= /usr/local
+MANDIR ?= $(PREFIX)/share/man/man8/symlinks.8
+BINDIR ?= $(PREFIX)/bin
+
 
 .PHONY: all
 all: symlinks
