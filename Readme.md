@@ -20,9 +20,9 @@ Installation
     $ make
     $ make install  # or 'sudo make install' if you get an error
 
-If you would like to install to some other location besides the default of `/usr/local/bin`, which usually requires admin privileges, then add `PREFIX=/some/other/path` to the end of your `make install`. For example:
+If you would like to install to some other location besides the default of `/usr/local`, which usually requires admin privileges, then add `PREFIX=/some/other/path` to the end of your `make install`. For example:
 
-    $ make install PREFIX=$HOME/.local/bin
+    $ make install PREFIX=$HOME/.local
 
 ### Pre-compiled binaries:
 
