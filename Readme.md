@@ -16,9 +16,19 @@ Installation
 
 ### Source:
 
-    $ ./configure
+    $ cd path/to/the/extracted/source
     $ make
-    $ make install
+    $ make install  # or 'sudo make install' if you get an error
+
+If you would like to install to some other location besides the default of `/usr/local`, which usually requires admin privileges, then add `PREFIX=/some/other/path` to the end of your `make install`. For example:
+
+    $ make install PREFIX=$HOME/.local
+
+### Pre-compiled binaries:
+
+Many Linux distributions already have a version of Mark Lord's original `symlinks` in their repositories; see https://pkgs.org/search/?q=symlinks for details.
+
+If you use MacPorts, you can `sudo port install symlinks`.
 
 
 Usage
